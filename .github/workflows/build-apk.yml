@@ -19,6 +19,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+          
       - name: Create debug keystore
         run: |
           mkdir -p "$HOME/.android"
