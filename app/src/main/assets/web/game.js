@@ -938,10 +938,22 @@
     }
 
     onWindowResize() {
-      const width = this.container.clientWidth;
-      const height = this.container.clientHeight;
-      this.renderer.setSize(width, height);
-      this.updateCameraPosition();
+  if (!this.renderer || !this.container) return;
+
+  const width = this.container.clientWidth;
+  const height = this.container.clientHeight;
+
+  // Ignore invalid / zero sizes
+  if (width <= 0 || height <= 0) return;
+
+  // Skip if size didn't actually change (performance)
+  if (width === this._lastKnownWidth && height === this._lastKnownHeight) return;
+
+  this._lastKnownWidth = width;
+  this._lastKnownHeight = height;
+
+  this.renderer.setSize(width, height, false);
+  this.updateCameraPosition();
     }
 
     // --- PROCEDURAL 3D BOLT & NUT MESHES ---
