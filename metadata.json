@@ -1,0 +1,6 @@
+{
+  "name": "CJ Nuts Puzzle",
+  "description": "3D realistic metallic nut-sorting puzzle game set in a workshop with 30+ levels, undo, hint solver, and smooth physics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

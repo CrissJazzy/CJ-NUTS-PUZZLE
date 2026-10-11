@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>CJ Nuts Puzzle</title>
+  <link rel="stylesheet" href="game.css">
+</head>
+<body>
+  <!-- 3D Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- HUD & Game Overlay -->
+  <div id="ui-overlay">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="brand-section">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none">
+          <polygon points="12,2 20.66,7 20.66,17 12,22 3.34,17 3.34,7" fill="#ffb703" stroke="#ffd166" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="4.5" fill="#141824" stroke="#ffb703" stroke-width="1"/>
+        </svg>
+        <span class="brand-title">CJ NUTS</span>
+      </div>
+
+      <button id="level-badge-btn" class="level-badge" title="Select Level">
+        <span id="level-badge-text">LVL 1</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+
+      <div class="top-actions">
+        <button id="sound-btn" class="icon-btn" title="Toggle Sound">
+          <svg id="sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <svg id="sound-icon-off" style="display:none;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+        </button>
+        <button id="settings-btn" class="icon-btn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Game HUD: Moves, Timer, Completed Stacks -->
+    <div class="hud-panel">
+      <div class="hud-item">
+        <span class="hud-label">Moves</span>
+        <span id="hud-moves" class="hud-value">0</span>
+      </div>
+      <div class="hud-divider"></div>
+      <div class="hud-item">
+        <span class="hud-label">Time</span>
+        <span id="hud-time" class="hud-value">00:00</span>
+      </div>
+      <div class="hud-divider"></div>
+      <div class="hud-item">
+        <span class="hud-label">Sorted</span>
+        <span id="hud-sorted" class="hud-value">0/3</span>
+      </div>
+    </div>
+
+    <!-- Hint notification banner -->
+    <div id="hint-banner" class="hint-banner" style="display: none;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"></line><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+      <span id="hint-text">Hint: Move Nut to Bolt 2</span>
+    </div>
+
+    <!-- Spacer -->
+    <div style="flex: 1;"></div>
+
+    <!-- Bottom Controls -->
+    <footer class="bottom-controls">
+      <button id="undo-btn" class="action-btn" title="Undo move" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+        <span>Undo</span>
+      </button>
+
+      <button id="hint-btn" class="action-btn hint-btn" title="Show hint">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>
+        <span>Hint</span>
+      </button>
+
+      <button id="restart-btn" class="action-btn" title="Restart level">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+        <span>Restart</span>
+      </button>
+
+      <button id="rules-btn" class="action-btn" title="How to play">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>Rules</span>
+      </button>
+    </footer>
+  </div>
+
+  <!-- VICTORY MODAL -->
+  <div id="victory-modal" class="modal-overlay">
+    <div class="modal-content victory-card">
+      <h2 class="victory-title">LEVEL COMPLETE!</h2>
+      <p id="victory-level-subtitle" class="victory-subtitle">Level 1 Sorted Perfectly</p>
+
+      <div class="stars-row">
+        <span class="star-icon filled">★</span>
+        <span id="star-2" class="star-icon filled">★</span>
+        <span id="star-3" class="star-icon filled">★</span>
+      </div>
+
+      <div class="victory-stats">
+        <div class="stat-box">
+          <div class="stat-box-label">Total Moves</div>
+          <div id="victory-moves" class="stat-box-value">12</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Time Taken</div>
+          <div id="victory-time" class="stat-box-value">00:35</div>
+        </div>
+      </div>
+
+      <button id="next-level-btn" class="primary-btn">NEXT LEVEL</button>
+      <button id="replay-level-btn" class="secondary-btn">Play Again</button>
+    </div>
+  </div>
+
+  <!-- LEVEL SELECT MODAL -->
+  <div id="levels-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Select Level</h3>
+        <button id="close-levels-btn" class="close-btn">✕</button>
+      </div>
+      <div id="levels-grid" class="levels-grid">
+        <!-- Rendered dynamically 1-30 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Settings</h3>
+        <button id="close-settings-btn" class="close-btn">✕</button>
+      </div>
+      <div class="settings-list">
+        <!-- Cloud Save Account Section -->
+        <div id="auth-section">
+          <div id="unauth-view">
+            <button id="google-signin-btn" class="google-signin-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+              <span>Sign in with Google to Sync</span>
+            </button>
+          </div>
+          <div id="auth-view" style="display: none;">
+            <div class="user-profile-card">
+              <div>
+                <div id="user-display-name" class="user-name">Player</div>
+                <div class="user-status">☁ Cloud Save Active</div>
+              </div>
+              <button id="signout-btn" class="secondary-btn" style="width: auto; padding: 6px 12px; font-size: 12px;">Sign Out</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-title">Sound Effects</span>
+            <span class="setting-desc">Metallic sliding & clink audio</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="setting-sound" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-title">Haptic Vibration</span>
+            <span class="setting-desc">Tactile clicks on device</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="setting-haptic" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <button id="reset-progress-btn" class="secondary-btn" style="color: #f87171; border-color: rgba(239, 68, 68, 0.3);">
+          Reset All Progress
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RULES MODAL -->
+  <div id="rules-modal" class="modal-overlay">
+    <div class="modal-content rules-content">
+      <div class="modal-header">
+        <h3 class="modal-title">How To Play</h3>
+        <button id="close-rules-btn" class="close-btn">✕</button>
+      </div>
+      <p><strong>Goal:</strong> Sort all colorful metallic nuts so that each bolt contains nuts of only <strong>one color</strong>.</p>
+      <ul>
+        <li><strong>Tap a bolt</strong> to lift its top nut.</li>
+        <li><strong>Tap another bolt</strong> to place the nut.</li>
+        <li>A nut can only be placed onto an <strong>empty bolt</strong> or on top of a nut of the <strong>exact same color</strong>.</li>
+        <li>Each bolt holds a maximum of <strong>4 nuts</strong>.</li>
+        <li>Use empty bolts as temporary sorting spots.</li>
+        <li>Tap <strong>Undo</strong> to reverse any move, or <strong>Hint</strong> if you get stuck!</li>
+      </ul>
+      <button id="close-rules-confirm-btn" class="primary-btn">GOT IT</button>
+    </div>
+  </div>
+
+  <!-- Three.js and Game Script -->
+  <script src="three.min.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

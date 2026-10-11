@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with game progress and unlocked level",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The Firebase Authentication UID of the player"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The player display name or email"
+        },
+        "unlockedLevel": {
+          "type": "integer",
+          "description": "The highest unlocked level reached (1-30)"
+        },
+        "totalStars": {
+          "type": "integer",
+          "description": "Total stars accumulated across completed levels"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when progress was last synced"
+        }
+      },
+      "required": ["userId", "displayName", "unlockedLevel", "totalStars", "updatedAt"]
+    },
+    "LevelRecord": {
+      "title": "LevelRecord",
+      "description": "Best score record for a specific completed level",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The Firebase Authentication UID of the player"
+        },
+        "levelNumber": {
+          "type": "integer",
+          "description": "Level number between 1 and 30"
+        },
+        "stars": {
+          "type": "integer",
+          "description": "Stars earned (1 to 3)"
+        },
+        "bestMoves": {
+          "type": "integer",
+          "description": "Lowest move count achieved on this level"
+        },
+        "bestTimeSeconds": {
+          "type": "integer",
+          "description": "Fastest completion time in seconds"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when level was achieved"
+        }
+      },
+      "required": ["userId", "levelNumber", "stars", "bestMoves", "bestTimeSeconds", "completedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Player game progress and sync state"
+    },
+    "/users/{userId}/records/{levelNumber}": {
+      "schema": "LevelRecord",
+      "description": "Per-level performance and star records"
+    }
+  }
+}

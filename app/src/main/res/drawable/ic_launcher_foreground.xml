@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Central Bolt Shaft -->
+    <path
+        android:pathData="M48,22 L60,22 L60,86 L48,86 Z"
+        android:fillColor="#8C9AA8" />
+    <!-- Bolt thread notches -->
+    <path
+        android:pathData="M46,26 L62,29 M46,33 L62,36 M46,72 L62,75 M46,79 L62,82"
+        android:strokeWidth="1.8"
+        android:strokeColor="#566270" />
+
+    <!-- Bolt Top Cap (Domed) -->
+    <path
+        android:pathData="M46,24 C46,20 62,20 62,24 Z"
+        android:fillColor="#B0BDCC" />
+
+    <!-- Bottom Nut (Ruby/Crimson Metallic) -->
+    <path
+        android:pathData="M35,68 L54,61 L73,68 L73,78 L54,85 L35,78 Z"
+        android:fillColor="#E63946" />
+    <path
+        android:pathData="M35,68 L54,61 L54,71 L35,78 Z"
+        android:fillColor="#FF5C6C" />
+    <!-- Bottom Nut Hole -->
+    <path
+        android:pathData="M48,68 A6,3.5 0 1,0 60,68 A6,3.5 0 1,0 48,68"
+        android:fillColor="#1E232A" />
+
+    <!-- Middle Nut (Vibrant Emerald/Cyan Metallic) -->
+    <path
+        android:pathData="M33,52 L54,45 L75,52 L75,62 L54,69 L33,62 Z"
+        android:fillColor="#06D6A0" />
+    <path
+        android:pathData="M33,52 L54,45 L54,55 L33,62 Z"
+        android:fillColor="#48FFCF" />
+    <path
+        android:pathData="M48,52 A6,3.5 0 1,0 60,52 A6,3.5 0 1,0 48,52"
+        android:fillColor="#1E232A" />
+
+    <!-- Top Lifted Nut (Gold Anodized Hex Nut) -->
+    <path
+        android:pathData="M32,36 L54,28 L76,36 L76,47 L54,55 L32,47 Z"
+        android:fillColor="#FFB703" />
+    <path
+        android:pathData="M32,36 L54,28 L54,39 L32,47 Z"
+        android:fillColor="#FFD166" />
+    <path
+        android:pathData="M47,37 A7,4 0 1,0 61,37 A7,4 0 1,0 47,37"
+        android:fillColor="#1E232A" />
+
+    <!-- Highlight glint -->
+    <path
+        android:pathData="M52,29 L56,29 L54,35 Z"
+        android:fillColor="#FFFFFF" />
+</vector>

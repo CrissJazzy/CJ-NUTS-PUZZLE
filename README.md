@@ -1,11 +1,35 @@
-<div align="center">
+# CJ Nuts Puzzle
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A realistic 3D metallic color-sorting nut puzzle game set in an industrial workshop environment.
 
-  <h1>Built with AI Studio</h2>
+## Features
+- **Mechanics**: Real nut-sorting logic, smooth multi-stage 3D movement animations (lift, arc, slide down), legal move enforcement.
+- **3D Graphics**: PBR Metallic materials, authentic hexagonal nuts with central cylindrical opening, steel threaded bolt shafts, rich wooden workbench table, soft directional shadows.
+- **Progressive Levels**: 30 solvable levels generated from solved configurations with legal scrambles.
+- **Solver & Hints**: Integrated BFS solver to guarantee solutions and provide hints.
+- **Undo & Restart**: Full move history stack and level reset.
+- **Audio & Haptics**: Procedural metallic sound synthesis via Web Audio API (no external downloads needed) and Android haptic feedback bridge.
+- **Platforms**:
+  - **Android**: Edge-to-edge hardware-accelerated WebView with native haptics integration.
+  - **Web**: React + TypeScript + Three.js + Vite ready for Netlify / Vercel / GitHub Pages.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Building and Running
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+### Android Application
+Compile and build the APK via Gradle:
+```bash
+gradle assembleDebug
+```
 
-</div>
+### Web Application (Vite / Netlify)
+Install dependencies and run local dev server:
+```bash
+npm install
+npm run dev
+```
+
+Build production static bundle for Netlify / web hosting:
+```bash
+npm run build
+```
+The output directory will be in `dist/`.
