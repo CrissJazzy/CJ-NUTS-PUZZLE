@@ -12,7 +12,12 @@
           "package_name": "com.aistudio.cjnuts.qzvpk"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "157780905685-ai3b0ebareafrks9p4j227satvrl8bp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAhcXxK7eMIGxqLNYRodcpn_8D03xNH-V0"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157780905685-ai3b0ebareafrks9p4j227satvrl8bp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
