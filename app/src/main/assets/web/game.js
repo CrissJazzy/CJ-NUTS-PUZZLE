@@ -742,79 +742,91 @@
 
     // --- THREE.JS INITIALIZATION ---
     initThree() {
-      const width = this.container.clientWidth;
-      const height = this.container.clientHeight;
+  // 1. Scene
+  this.scene = new THREE.Scene();
+  this.scene.background = new THREE.Color(0x0e1117);
+  this.scene.fog = new THREE.FogExp2(0x0e1117, 0.022);
 
-      // 1. Scene
-      this.scene = new THREE.Scene();
-      this.scene.background = new THREE.Color(0x0e1117);
-      this.scene.fog = new THREE.FogExp2(0x0e1117, 0.022);
+  // 2. Camera (use safe fallback aspect until real size is known)
+  this.camera = new THREE.PerspectiveCamera(46, 9 / 16, 0.1, 100);
 
-      // 2. Camera
-      this.camera = new THREE.PerspectiveCamera(46, width / height, 0.1, 100);
-      this.updateCameraPosition();
+  // 3. Renderer
+  this.renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: false,
+    powerPreference: 'high-performance'
+  });
+  this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  this.renderer.shadowMap.enabled = true;
+  this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  this.renderer.toneMappingExposure = 1.15;
+  this.container.appendChild(this.renderer.domElement);
 
-      // 3. Renderer with high visual fidelity
-      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
-      this.renderer.setSize(width, height);
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      this.renderer.shadowMap.enabled = true;
-      this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      this.renderer.toneMappingExposure = 1.15;
-      this.container.appendChild(this.renderer.domElement);
+  // 4. Lighting
+  const ambientLight = new THREE.AmbientLight(0xfff5ea, 0.55);
+  this.scene.add(ambientLight);
 
-      // 4. Lighting - Realistic Workshop Environment
-      // Ambient warm light
-      const ambientLight = new THREE.AmbientLight(0xfff5ea, 0.55);
-      this.scene.add(ambientLight);
+  const keyLight = new THREE.DirectionalLight(0xfffaed, 1.35);
+  keyLight.position.set(6, 16, 9);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.width = 1024;
+  keyLight.shadow.mapSize.height = 1024;
+  keyLight.shadow.camera.near = 0.5;
+  keyLight.shadow.camera.far = 40;
+  keyLight.shadow.camera.left = -14;
+  keyLight.shadow.camera.right = 14;
+  keyLight.shadow.camera.top = 14;
+  keyLight.shadow.camera.bottom = -14;
+  keyLight.shadow.bias = -0.0005;
+  this.scene.add(keyLight);
 
-      // Key light with shadow
-      const keyLight = new THREE.DirectionalLight(0xfffaed, 1.35);
-      keyLight.position.set(6, 16, 9);
-      keyLight.castShadow = true;
-      keyLight.shadow.mapSize.width = 1024;
-      keyLight.shadow.mapSize.height = 1024;
-      keyLight.shadow.camera.near = 0.5;
-      keyLight.shadow.camera.far = 40;
-      keyLight.shadow.camera.left = -14;
-      keyLight.shadow.camera.right = 14;
-      keyLight.shadow.camera.top = 14;
-      keyLight.shadow.camera.bottom = -14;
-      keyLight.shadow.bias = -0.0005;
-      this.scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0x7090b0, 0.6);
+  fillLight.position.set(-8, 10, -6);
+  this.scene.add(fillLight);
 
-      // Cool fill light from right
-      const fillLight = new THREE.DirectionalLight(0x7090b0, 0.6);
-      fillLight.position.set(-8, 10, -6);
-      this.scene.add(fillLight);
+  const rimLight = new THREE.DirectionalLight(0xffb703, 0.35);
+  rimLight.position.set(0, 5, -12);
+  this.scene.add(rimLight);
 
-      // Rim light for metallic edges
-      const rimLight = new THREE.DirectionalLight(0xffb703, 0.35);
-      rimLight.position.set(0, 5, -12);
-      this.scene.add(rimLight);
+  // Tabletop + indicator rings
+  this.createTabletop();
+  this.createIndicatorRings();
 
-      // Tabletop workbench
-      this.createTabletop();
+  // Raycasting
+  this.raycaster = new THREE.Raycaster();
+  this.mouse = new THREE.Vector2();
 
-      // Selection & Hint indicator rings
-      this.createIndicatorRings();
+  // Interaction
+  this.setupInteractionListeners();
 
-      // Setup Raycasting for touch/click interaction
-      this.raycaster = new THREE.Raycaster();
-      this.mouse = new THREE.Vector2();
+  // ========== PERMANENT RESIZE FIX ==========
+  this._lastKnownWidth = 0;
+  this._lastKnownHeight = 0;
 
-      // Touch / pointer listeners
-      this.setupInteractionListeners();
+  // Reliable size detection (works even when window.resize doesn't fire)
+  if (typeof ResizeObserver !== 'undefined') {
+    this._resizeObserver = new ResizeObserver(() => {
+      this.onWindowResize();
+    });
+    this._resizeObserver.observe(this.container);
+  }
 
-      // Resize listener
-      window.addEventListener('resize', () => this.onWindowResize());
+  // Fallback for older WebViews
+  window.addEventListener('resize', () => this.onWindowResize());
 
-      // Animation loop
-      this.clock = new THREE.Clock();
-      this.animate = this.animate.bind(this);
-      requestAnimationFrame(this.animate);
-    }
+  // Force size check multiple times (critical for Android WebView)
+  const forceSize = () => this.onWindowResize();
+  requestAnimationFrame(forceSize);
+  setTimeout(forceSize, 50);
+  setTimeout(forceSize, 150);
+  setTimeout(forceSize, 400);
+
+  // Animation loop
+  this.clock = new THREE.Clock();
+  this.animate = this.animate.bind(this);
+  requestAnimationFrame(this.animate);
+                                       }
 
     createTabletop() {
       // Procedural rich wood grain canvas texture
